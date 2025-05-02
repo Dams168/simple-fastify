@@ -1,0 +1,17 @@
+{
+  "name": "fastify",
+  "version": "1.0.0",
+  "main": "src/app.js",
+  "scripts": {
+    "start": "node src/app.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "fastify": "^5.3.2",
+    "fastify-plugin": "^5.0.1",
+    "pg": "^8.15.6"
+  }
+}
