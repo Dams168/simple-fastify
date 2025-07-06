@@ -95,4 +95,29 @@ module.exports = class productController {
             });
         }
     }
+
+    static async deleteProduct(request, reply) {
+        try {
+            const id = Number(request.params.id);
+            const result = await pool.query('DELETE FROM products WHERE id = $1 RETURNING *', [id]);
+            if (result.rowCount === 0) {
+                return reply.code(404).send({
+                    status: 'fail',
+                    message: 'Product not found'
+                });
+            }
+            reply.code(200).send({
+                status: 'success',
+                message: 'Product deleted successfully',
+                data: result.rows[0]
+            });
+        } catch (error) {
+            console.error('Error deleting product:', error);
+            reply.code(500).send({
+                status: 'error',
+                message: 'Failed to delete product',
+                error: error.message
+            });
+        }
+    }
 }
