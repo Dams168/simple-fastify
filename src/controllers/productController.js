@@ -70,4 +70,29 @@ module.exports = class productController {
             });
         }
     }
+
+    static async getProductById(request, reply) {
+        try {
+            const id = Number(request.params.id);
+            const result = await pool.query('SELECT * FROM products WHERE id = $1', [id]);
+            if (result.rowCount === 0) {
+                return reply.code(404).send({
+                    status: 'fail',
+                    message: 'Product not found'
+                })
+            }
+            reply.code(200).send({
+                status: 'success',
+                message: 'Product fetched successfully',
+                data: result.rows[0]
+            })
+        } catch (error) {
+            console.error('Error fetching product:', error);
+            reply.code(500).send({
+                status: 'error',
+                message: 'Failed to fetch product',
+                error: error.message
+            });
+        }
+    }
 }
