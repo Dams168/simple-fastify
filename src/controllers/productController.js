@@ -41,4 +41,33 @@ module.exports = class productController {
             });
         }
     }
+
+    static async updateProduct(request, reply) {
+        try {
+            const id = Number(request.params.id);
+            const { name, price, description } = request.body;
+            const result = await pool.query(
+                'UPDATE products SET name = $1, price = $2, description = $3 WHERE id = $4 RETURNING *',
+                [name, price, description, id]
+            );
+            if (result.rowCount === 0) {
+                return reply.code(404).send({
+                    status: 'fail',
+                    message: 'Product not found'
+                });
+            }
+            reply.code(200).send({
+                status: 'success',
+                message: 'Product updated successfully',
+                data: result.rows
+            });
+        } catch (error) {
+            console.error('Error updating product:', error);
+            reply.code(500).send({
+                status: 'error',
+                message: 'Failed to update product',
+                error: error.message
+            });
+        }
+    }
 }
